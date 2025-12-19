@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Crossform • Calculadora de Cargas</title>
 <style>
 :root{
@@ -29,15 +30,15 @@ button{background:var(--green);color:#000;font-weight:700;margin-top:16px}
 .p15{background:#fdd835;width:28px}
 .p10{background:#2ecc71;width:24px}
 .p5{background:#f5f5f5;width:20px}
-.px{background:#828282;width:16px}
+.px{background:#000;width:16px}
 .footer{text-align:center;font-size:11px;color:#666;margin-top:20px}
 </style>
-<style type="text/css" id="operaUserStyle"></style></head>
+</head>
 <body>
 <div class="app">
 <div class="logo">CROSSFORM</div>
 <div class="subtitle">Calculadora de cargas • Mobile</div>
-<div class="subtitle">Criado por • Coach Luís Otávio Sotareli</div>
+
 <div class="row">
   <div style="flex:2"><label>Exercício</label><input id="exercise" placeholder="Back Squat"></div>
   <div style="flex:1"><label>1RM</label><input type="number" id="oneRM"></div>
@@ -50,11 +51,11 @@ button{background:var(--green);color:#000;font-weight:700;margin-top:16px}
 </select>
 
 <label>Anilhas indisponíveis</label>
-<div class="checks" id="checks"><label><input type="checkbox" checked="" onchange="togglePlate(20, this.checked)">20kg</label><label><input type="checkbox" checked="" onchange="togglePlate(15, this.checked)">15kg</label><label><input type="checkbox" checked="" onchange="togglePlate(10, this.checked)">10kg</label><label><input type="checkbox" checked="" onchange="togglePlate(5, this.checked)">5kg</label><label><input type="checkbox" checked="" onchange="togglePlate(3, this.checked)">3kg</label><label><input type="checkbox" checked="" onchange="togglePlate(2.5, this.checked)">2.5kg</label><label><input type="checkbox" checked="" onchange="togglePlate(2, this.checked)">2kg</label><label><input type="checkbox" checked="" onchange="togglePlate(1.25, this.checked)">1.25kg</label><label><input type="checkbox" checked="" onchange="togglePlate(1, this.checked)">1kg</label></div>
+<div class="checks" id="checks"></div>
 
 <button onclick="generatePercentages()">Gerar Percentuais</button>
 
-<div class="percentages" id="percentages"><div class="cell" data-p="25"><strong>25%</strong>34kg</div><div class="cell" data-p="30"><strong>30%</strong>40kg</div><div class="cell" data-p="35"><strong>35%</strong>46kg</div><div class="cell" data-p="40"><strong>40%</strong>52kg</div><div class="cell" data-p="45"><strong>45%</strong>60kg</div><div class="cell" data-p="50"><strong>50%</strong>66kg</div><div class="cell" data-p="55"><strong>55%</strong>72kg</div><div class="cell" data-p="60"><strong>60%</strong>78kg</div><div class="cell" data-p="65"><strong>65%</strong>86kg</div><div class="cell" data-p="70"><strong>70%</strong>92kg</div><div class="cell" data-p="75"><strong>75%</strong>98kg</div><div class="cell" data-p="80"><strong>80%</strong>104kg</div><div class="cell" data-p="85"><strong>85%</strong>112kg</div><div class="cell" data-p="90"><strong>90%</strong>118kg</div><div class="cell" data-p="95"><strong>95%</strong>124kg</div><div class="cell" data-p="100"><strong>100%</strong>130kg</div></div>
+<div class="percentages" id="percentages"></div>
 
 <label>Carga Manual</label>
 <input type="number" id="manualWeight" oninput="manualInput(this.value)">
@@ -189,6 +190,5 @@ function recalc(){
   if(manualWeight.value) calculate(parseFloat(manualWeight.value));
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
