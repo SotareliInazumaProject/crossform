@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Crossform • Calculadora de Cargas</title>
 <style>
 :root{
- --black:#0b0b0b;--dark:#141414;--gray:#2a2a2a;--green:#1db954;--light:#e5e5e5;--active:#2ecc71
+ --black:#0b0b0b;--dark:#141414;--gray:#2a2a2a;
+ --green:#1db954;--light:#e5e5e5;--active:#2ecc71
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--black);color:var(--light)}
@@ -30,10 +32,13 @@ button{background:var(--green);color:#000;font-weight:700;margin-top:16px}
 .p15{background:#fdd835;width:28px}
 .p10{background:#2ecc71;width:24px}
 .p5{background:#f5f5f5;width:20px}
+
+/* 🔧 CORRIGIDO: anilhas pequenas em cinza médio */
 .px{background:#8a8a8a;width:16px}
+
 .footer{text-align:center;font-size:11px;color:#666;margin-top:20px}
 </style>
-<style type="text/css" id="operaUserStyle"></style></head>
+</head>
 <body>
 <div class="app">
 <div class="logo">CROSSFORM</div>
@@ -52,16 +57,16 @@ button{background:var(--green);color:#000;font-weight:700;margin-top:16px}
 </select>
 
 <label>Anilhas indisponíveis</label>
-<div class="checks" id="checks"><label><input type="checkbox" checked="" onchange="togglePlate(20, this.checked)">20kg</label><label><input type="checkbox" checked="" onchange="togglePlate(15, this.checked)">15kg</label><label><input type="checkbox" checked="" onchange="togglePlate(10, this.checked)">10kg</label><label><input type="checkbox" checked="" onchange="togglePlate(5, this.checked)">5kg</label><label><input type="checkbox" checked="" onchange="togglePlate(3, this.checked)">3kg</label><label><input type="checkbox" checked="" onchange="togglePlate(2.5, this.checked)">2.5kg</label><label><input type="checkbox" checked="" onchange="togglePlate(2, this.checked)">2kg</label><label><input type="checkbox" checked="" onchange="togglePlate(1.25, this.checked)">1.25kg</label><label><input type="checkbox" checked="" onchange="togglePlate(1, this.checked)">1kg</label></div>
+<div class="checks" id="checks"></div>
 
 <button onclick="generatePercentages()">Gerar Percentuais</button>
 
-<div class="percentages" id="percentages"><div class="cell" data-p="25"><strong>25%</strong>48kg</div><div class="cell" data-p="30"><strong>30%</strong>58kg</div><div class="cell active" data-p="35"><strong>35%</strong>68kg</div><div class="cell" data-p="40"><strong>40%</strong>76kg</div><div class="cell" data-p="45"><strong>45%</strong>86kg</div><div class="cell" data-p="50"><strong>50%</strong>96kg</div><div class="cell" data-p="55"><strong>55%</strong>106kg</div><div class="cell" data-p="60"><strong>60%</strong>114kg</div><div class="cell" data-p="65"><strong>65%</strong>124kg</div><div class="cell" data-p="70"><strong>70%</strong>134kg</div><div class="cell" data-p="75"><strong>75%</strong>144kg</div><div class="cell" data-p="80"><strong>80%</strong>152kg</div><div class="cell" data-p="85"><strong>85%</strong>162kg</div><div class="cell" data-p="90"><strong>90%</strong>172kg</div><div class="cell" data-p="95"><strong>95%</strong>182kg</div><div class="cell" data-p="100"><strong>100%</strong>190kg</div></div>
+<div class="percentages" id="percentages"></div>
 
 <label>Carga Manual</label>
 <input type="number" id="manualWeight" oninput="manualInput(this.value)">
 
-<div class="result" id="result"><strong>Peso total:</strong> 68kg<br><strong>Montagem por lado:</strong><br>1 × 20kg<br>1 × 3kg<br>1 × 1kg<div class="bar"><div class="plate p20"></div><div class="plate px"></div><div class="plate px"></div></div></div>
+<div class="result" id="result"></div>
 <div class="footer">© Crossform</div>
 </div>
 
@@ -90,12 +95,33 @@ function togglePlate(p, on){
 
 function smallestIncrement(){
   const min = Math.min(...availablePlates);
-  return min * 2; // par de anilhas
+  return min * 2;
 }
 
+/* ✅ VERIFICA SE O PESO É MONTÁVEL */
+function canAssemble(total, bar){
+  if(total <= bar) return false;
+  let side = (total - bar) / 2;
+
+  for(let p of availablePlates){
+    const count = Math.floor(side / p);
+    side -= count * p;
+  }
+  // tolerância mínima apenas para erro de ponto flutuante
+  return Math.abs(side) < 0.0001;
+}
+
+/* ✅ NÃO ARREDONDA SE JÁ FOR POSSÍVEL */
 function roundToPossible(weight, bar){
+  if(canAssemble(weight, bar)) return weight;
+
   const inc = smallestIncrement();
-  return bar + Math.ceil((weight - bar) / inc) * inc;
+  let candidate = weight;
+
+  while(!canAssemble(candidate, bar)){
+    candidate += inc;
+  }
+  return candidate;
 }
 
 function generatePercentages(){
@@ -133,7 +159,7 @@ function manualInput(value){
 
   const oneRM = parseFloat(oneRMInput.value);
   if(oneRM){
-    const perc = Math.round((weight / oneRM) * 100);
+    const perc = (weight / oneRM) * 100;
     highlight(closestPercent(perc));
   }
   calculate(weight);
@@ -196,6 +222,5 @@ function recalc(){
   if(manualWeight.value) calculate(parseFloat(manualWeight.value));
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
